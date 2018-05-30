@@ -27,5 +27,21 @@ const Countries = function (){
 
 };
 
+Countries.prototype.bindEvents = function () {
+  const payload = [];
+  this.countries.forEach((country) => {
+    payload.push(country.name);
+  })
+  PubSub.publish('Countries:drop-down-data-loaded', (payload));
+  this.selectedCountryToDb();
+};
+
+Countries.prototype.selectedCountryToDb = function () {
+  PubSub.subscribe('CountrySelectView:selected-country', (evt) => {
+    const selectedIndex = evt.detail;
+    const selectedCountry = this.countries[selectedIndex];
+    console.log(selectedCountry);
+  })
+};
 
 module.exports = Countries;
